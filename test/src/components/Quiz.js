@@ -10,7 +10,7 @@ export default class Quiz extends Component {
             <View>
                 <Text> {testData}</Text>
                 <Button title = "ana sayfa"
-         onPress = {()=> navigate('Home')}
+            onPress = {()=> navigate('Home')}
          />
                 <Button title = "geri git"
                 onPress = {()=> goBack()}

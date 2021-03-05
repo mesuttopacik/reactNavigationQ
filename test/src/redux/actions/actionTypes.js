@@ -1,0 +1,2 @@
+export const CHANGE_TEST = "CHANGE_TEST"
+export const GET_TEST_SUCCESS = "GET_TEST_SUCCESS"

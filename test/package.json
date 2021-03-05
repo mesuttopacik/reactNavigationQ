@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "format": "prettier-eslint --eslint-config-path ./.eslintrc.js --write '**/*.js'",
+    "lint": "eslint . --ext .js"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
@@ -18,7 +19,9 @@
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.16.1",
     "react-navigation": "^4.4.3",
-    "react-navigation-stack": "^2.10.2"
+    "react-navigation-stack": "^2.10.2",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5"
   },
   "devDependencies": {
     "@babel/core": "7.12.10",

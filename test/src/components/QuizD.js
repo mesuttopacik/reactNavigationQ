@@ -7,14 +7,13 @@ import {
   FlatList,
   SafeAreaView,
 } from 'react-native';
-import {QuizData} from '../guncelTestler/QuizData';
-import {guncelTest1} from '../guncelTestler/guncelTest1';
-import {guncelTest2} from '../guncelTestler/guncelTest2';
+
 
 class Quiz extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      // quizData: QuizData,
       userAnswer: null,
       currentQuestion: 0,
       options: [],
@@ -24,15 +23,17 @@ class Quiz extends Component {
       wrong: 0,
     };
   }
-
+  // whichOne = () => {
+  //     return {guncelTest1} ///////////////////////////////
+  // }
   nextquestion = () => {
-    const {userAnswer, answers, score, empty, wrong} = this.state;
+    const {userAnswer, answer, score, empty, wrong} = this.state;
     this.setState({
       currentQuestion: this.state.currentQuestion + 1,
     });
     // console.log(this.state.currentQuestion);
     // console.log(userAnswer,answers)
-    if (userAnswer === answers) {
+    if (userAnswer === answer) {
       this.setState({
         score: score + 1,
         userAnswer: null,
@@ -50,69 +51,59 @@ class Quiz extends Component {
     }
   };
   componentDidUpdate(prevProps, prevState) {
-    const {currentQuestion} = this.state;
     if (this.state.currentQuestion !== prevState.currentQuestion) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState(() => {
-        return {
-          questions: QuizData[currentQuestion].question,
-          options: QuizData[currentQuestion].options,
-          answers: QuizData[currentQuestion].answer,
-        };
-      });
-    }
+      this.loadQuiz();
+         // eslint-disable-next-line react/no-did-update-set-state
+   }
   }
-  loadQuiz = () => {
+
+  loadQuiz = () =>  {
     const {currentQuestion} = this.state;
-    // const q = QuizData;
-    // console.log(q);
     const {getParam} = this.props.navigation;
     const testData = getParam('testData');
-    // var q = null;
-    // this.whichData(testData, q);
-    // this.deneme(q);
+    console.log(testData[currentQuestion].answer);
 
-    // console.log(q);
-    // if (testData === 'guncelTest1'){
-    //   var q = guncelTest1;
-    // }if (testData === 'guncelTest2'){
-    //   var q = guncelTest2;
-    // }
+      this.setState(() => {
+        return{
+          question: testData[currentQuestion].question,
+          options: testData[currentQuestion].options,
+          answer: testData[currentQuestion].answer,
+        }  
+      })
+  }
 
 
+  componentDidMount() {
+    this.loadQuiz();
+  }
 
-    this.setState(() => {
-      return {
-        questions: QuizData[currentQuestion].question,
-        options: QuizData[currentQuestion].options,
-        answers: QuizData[currentQuestion].answer,
-      };
+  checkAnswer = (answer) => {
+        this.setState({
+      userAnswer: answer,
     });
   };
-  // whichData = (q, testData) => {
-  //   if (testData === 'guncelTest1') {
-  //    q = guncelTest1;
+  // whichTestData = (g) =>  {
+  //   const {currentQuestion, quizData} = this.state;
+  //   const {getParam} = this.props.navigation;
+  //   const testData = getParam('testData');
+  //   let g = testData;
+  //   if (testData === 'guncelTest1'){
+  //     g = quizData.g1;
+  //     return g;   
+  //   }else if (testData === 'guncelTest2'){
+  //     g = quizData.g2;
+  //    return g;
   //   }
   // }
 
-  checkAnswer = (answer) => {
-    // const correctAnswer = this.state.answers
-    this.setState({
-      userAnswer: answer,
-    });
-    // if (answer === correctAnswer)  { kullanıcı işari ile gerçek değeri alıp karşılaşrıdım çalışyor
-    //   console.log('skor');
-    // }
-  };
-  // if(userAnswer === answers){
-  //   this.setState({
-  //     score : score + 1
-  //   })
-  // }
   finishHandler = () => {
+    
     // console.log('sinav bitti skor table sayafası> ');
-    const {userAnswer, answers, score, wrong, empty} = this.state;
-    if (userAnswer === answers) {
+    const {userAnswer, answer, score, wrong, empty} = this.state;
+    const {getParam} = this.props.navigation;
+    const testData = getParam('testData');
+    // this.whichTestData(g);
+    if (userAnswer === answer) {
       this.setState({
         score: score + 1,
       });
@@ -125,13 +116,14 @@ class Quiz extends Component {
         wrong: wrong + 1,
       });
     }
-    if (this.state.currentQuestion === QuizData.length - 1) {
+    if (this.state.currentQuestion === testData.length - 1) {
       this.setState({
         quizEnd: true,
       });
     }
   };
   listOptions = () => {
+    //console.log('soru seçeneklerini listele')
     const {options, userAnswer} = this.state;
     let i = 1;
     return options.map((option, i) => {
@@ -152,9 +144,7 @@ class Quiz extends Component {
       );
     });
   };
-  componentDidMount() {
-    this.loadQuiz();
-  }
+
   correctAnswerListHandler = ({item}) => {
     return (
       <View>
@@ -163,7 +153,9 @@ class Quiz extends Component {
     );
   };
   render() {
-    const {questions, currentQuestion, quizEnd} = this.state;
+    const {question, currentQuestion, quizEnd} = this.state;
+    const {getParam} = this.props.navigation;
+    const testData = getParam('testData');
     if (quizEnd) {
       return (
         <SafeAreaView>
@@ -172,7 +164,7 @@ class Quiz extends Component {
           <FlatList
             renderItem={this.correctAnswerListHandler}
             keyExtractor={(item) => item.id.toString()}
-            data={QuizData}
+            data={testData}
           />
           <View>
             <Text>doğru {this.state.score}</Text>
@@ -188,21 +180,21 @@ class Quiz extends Component {
       <View style={styles.container}>
         <View>
           <View style={styles.questionSty}>
-            <Text style={styles.questionText}> {questions} </Text>
+            <Text style={styles.questionText}> {question} </Text>
           </View>
           <Text>
-            {currentQuestion + 1} - {QuizData.length}
+            {currentQuestion + 1} - {testData.length}
           </Text>
           <View>
             <View>{this.listOptions()}</View>
-            {currentQuestion < QuizData.length - 1 && (
+            {currentQuestion < testData.length - 1 && (
               <TouchableOpacity
                 onPress={() => this.nextquestion()}
                 style={styles.nextButtonTocuhST}>
                 <Text>sonraki soru </Text>
               </TouchableOpacity>
             )}
-            {currentQuestion === QuizData.length - 1 && (
+            {currentQuestion === testData.length - 1 && (
               <TouchableOpacity
                 onPress={() => this.finishHandler()}
                 style={styles.nextButtonTocuhST}>
