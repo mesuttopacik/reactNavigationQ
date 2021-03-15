@@ -6,14 +6,13 @@ import {
   StyleSheet,
   FlatList,
   SafeAreaView,
+  Image,
 } from 'react-native';
-
 
 class Quiz extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // quizData: QuizData,
       userAnswer: null,
       currentQuestion: 0,
       options: [],
@@ -23,9 +22,10 @@ class Quiz extends Component {
       wrong: 0,
     };
   }
-  // whichOne = () => {
-  //     return {guncelTest1} ///////////////////////////////
-  // }
+
+  // static navigationOptions = {
+  //   title: 'belki burada sevimi bir icon vardır',
+  // };
   nextquestion = () => {
     const {userAnswer, answer, score, empty, wrong} = this.state;
     this.setState({
@@ -53,51 +53,35 @@ class Quiz extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.state.currentQuestion !== prevState.currentQuestion) {
       this.loadQuiz();
-         // eslint-disable-next-line react/no-did-update-set-state
-   }
+      // eslint-disable-next-line react/no-did-update-set-state
+    }
   }
 
-  loadQuiz = () =>  {
+  loadQuiz = () => {
     const {currentQuestion} = this.state;
     const {getParam} = this.props.navigation;
     const testData = getParam('testData');
-    console.log(testData[currentQuestion].answer);
 
-      this.setState(() => {
-        return{
-          question: testData[currentQuestion].question,
-          options: testData[currentQuestion].options,
-          answer: testData[currentQuestion].answer,
-        }  
-      })
-  }
-
+    this.setState(() => {
+      return {
+        question: testData[currentQuestion].question,
+        options: testData[currentQuestion].options,
+        answer: testData[currentQuestion].answer,
+      };
+    });
+  };
 
   componentDidMount() {
     this.loadQuiz();
   }
 
   checkAnswer = (answer) => {
-        this.setState({
+    this.setState({
       userAnswer: answer,
     });
   };
-  // whichTestData = (g) =>  {
-  //   const {currentQuestion, quizData} = this.state;
-  //   const {getParam} = this.props.navigation;
-  //   const testData = getParam('testData');
-  //   let g = testData;
-  //   if (testData === 'guncelTest1'){
-  //     g = quizData.g1;
-  //     return g;   
-  //   }else if (testData === 'guncelTest2'){
-  //     g = quizData.g2;
-  //    return g;
-  //   }
-  // }
 
   finishHandler = () => {
-    
     // console.log('sinav bitti skor table sayafası> ');
     const {userAnswer, answer, score, wrong, empty} = this.state;
     const {getParam} = this.props.navigation;
@@ -136,7 +120,10 @@ class Quiz extends Component {
               userAnswer === option ? styles.selected : null,
             ]}
             onPress={() => this.checkAnswer(option)}>
-            <Text style={userAnswer === option ? styles.selected : null}>
+            <Text
+              style={
+                userAnswer === option ? styles.selected : styles.optionText
+              }>
               {option}
             </Text>
           </TouchableOpacity>
@@ -147,61 +134,84 @@ class Quiz extends Component {
 
   correctAnswerListHandler = ({item}) => {
     return (
-      <View>
-        <Text>{item.answer}</Text>
+      <View style={styles.resultPageQA}>
+        <Text style={{color: '#040404', marginBottom: 5}}>{item.question}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Image
+            style={styles.checkImage}
+            source={require('../Images/checkMark.png')}></Image>
+          <Text>{item.answer}</Text>
+        </View>
       </View>
     );
   };
   render() {
     const {question, currentQuestion, quizEnd} = this.state;
-    const {getParam} = this.props.navigation;
+    const {getParam, navigate} = this.props.navigation;
     const testData = getParam('testData');
+    const testName = getParam('testName');
     if (quizEnd) {
       return (
-        <SafeAreaView>
-          <Text>sonuç sayfası</Text>
-          <Text>cevaplar</Text>
-          <FlatList
-            renderItem={this.correctAnswerListHandler}
-            keyExtractor={(item) => item.id.toString()}
-            data={testData}
-          />
-          <View>
-            <Text>doğru {this.state.score}</Text>
-            <Text>boş {this.state.empty}</Text>
-            <Text>yanlış {this.state.wrong}</Text>
+        <View style={styles.resultPage}>
+          <SafeAreaView style={styles.resultPageFlatlist}>
+            <View style={styles.resultPageList}>
+              <View style={styles.correctAnswerText}>
+                <Text style={{color: '#F4F6F6'}}>
+                  {testName} `İN SORULARI VE DOĞRU CEVAPLARI
+                </Text>
+              </View>
+
+              <FlatList
+                renderItem={this.correctAnswerListHandler}
+                keyExtractor={(item) => item.id.toString()}
+                data={testData}
+              />
+            </View>
+          </SafeAreaView>
+
+          <View style={styles.resultPageScore}>
+            <Text style={styles.scoreText}>Doğru: {this.state.score}</Text>
+            <Text style={styles.scoreText}>Yanlış: {this.state.wrong}</Text>
+            <Text style={styles.scoreText}>Boş: {this.state.empty}</Text>
           </View>
+          <TouchableOpacity
+            style={styles.returnTestListButton}
+            onPress={() => navigate('Guncel')}>
+            <Image
+              style={styles.checkImage}
+              source={require('../Images/backBtn.jpg')}></Image>
+            <Text style={styles.btnText}>Test Listitesine Dön</Text>
+          </TouchableOpacity>
 
           {/* buraya anasayfa ve güncel testlere gidecek iki tane buton eklenecek */}
-        </SafeAreaView>
+        </View>
       );
     }
     return (
       <View style={styles.container}>
+        <View style={styles.questionSty}>
+          <Text style={styles.questionText}> {question} </Text>
+        </View>
+        <Text style={styles.questionMap}>
+          {currentQuestion + 1} - {testData.length}
+        </Text>
         <View>
-          <View style={styles.questionSty}>
-            <Text style={styles.questionText}> {question} </Text>
-          </View>
-          <Text>
-            {currentQuestion + 1} - {testData.length}
-          </Text>
-          <View>
-            <View>{this.listOptions()}</View>
-            {currentQuestion < testData.length - 1 && (
-              <TouchableOpacity
-                onPress={() => this.nextquestion()}
-                style={styles.nextButtonTocuhST}>
-                <Text>sonraki soru </Text>
-              </TouchableOpacity>
-            )}
-            {currentQuestion === testData.length - 1 && (
-              <TouchableOpacity
-                onPress={() => this.finishHandler()}
-                style={styles.nextButtonTocuhST}>
-                <Text>sınavı bitir</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+          <View>{this.listOptions()}</View>
+          {currentQuestion < testData.length - 1 && (
+            <TouchableOpacity
+              onPress={() => this.nextquestion()}
+              style={styles.nextButton}>
+              <Text style={styles.nextButtonText}>SONRAKİ SORU >></Text>
+            </TouchableOpacity>
+          )}
+
+          {currentQuestion === testData.length - 1 && (
+            <TouchableOpacity
+              onPress={() => this.finishHandler()}
+              style={styles.nextButton}>
+              <Text style={styles.nextButtonText}>SONRAKİ SORU >></Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );
@@ -209,37 +219,138 @@ class Quiz extends Component {
 }
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    justifyContent: 'center',
+    flex: 1,
+    backgroundColor: '#F4F6F6',
+    justifyContent: 'flex-end',
     paddingHorizontal: 10,
   },
-  questionSty: {
+  resultPageList: {
     alignItems: 'center',
-    backgroundColor: '#80ffcc',
-    marginTop: 20,
-    margin: 20,
+  },
+  correctAnswerText: {
+    backgroundColor: '#FE8938',
+    borderColor: '#FE8938',
+    borderRadius: 3,
+    borderWidth: 2,
+    marginVertical: 8,
+    paddingHorizontal: 10,
+  },
+  resultPageFlatlist: {
+    flex: 8,
+  },
+  resultPageScore: {
+    flex: 1,
+    flexDirection: 'row',
+    // marginVertical: 5,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    // backgroundColor: 'transparent',
+    // borderColor: '#3A8A2E',
+    // borderRadius: 6,
+    // borderWidth: 3,
+  },
+  scoreText: {
+    color: '#F4F6F6',
+    backgroundColor: '#FE8938',
+    borderColor: '#FE8938',
+    marginHorizontal: 2,
+    fontWeight: 'bold',
+    padding: 10,
+    borderWidth: 2,
+    borderRadius: 15,
+  },
+
+  resultPage: {
+    flex: 1,
+    // marginTop: 5,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    backgroundColor: '#F4F6F6',
+    // justifyContent: 'flex-end',
+    // alignItems: 'flex-start',
+    // paddingHorizontal: 10,
+  },
+  resultPageQA: {
+    paddingLeft: 5,
+    margin: 10,
+    backgroundColor: '#98F4D7',
+    alignItems: 'flex-start',
+    borderWidth: 2,
+    borderColor: '#275BDB',
+    borderRadius: 4,
+  },
+
+  checkImage: {
+    width: 15,
+    height: 15,
+  },
+  questionSty: {
+    // flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#626F90',
+    marginBottom: 15,
+    padding: 30,
+    borderRadius: 8,
   },
   questionText: {
-    margin: 30,
+    // fontFamily: 'calibri',
+    fontWeight: 'bold',
+    margin: 1,
+    color: '#F4F6F6',
   },
-  nextButtonTocuhST: {
-    marginTop: 60,
+  questionMap: {
+    color: '#FE8938',
+    fontWeight: 'bold',
+  },
+  nextButton: {
+    // flex: 1,
+    backgroundColor: '#FE8938',
+    fontWeight: 'bold',
+    color: 'red',
+    margin: 60,
+    padding: 10,
+    borderRadius: 40,
     alignItems: 'center',
+  },
+  nextButtonText: {
+    color: '#626F90',
+    fontWeight: 'bold',
   },
   optionsST: {
-    marginTop: 20,
+    // flex: 4,
+    marginTop: 10,
   },
   button: {
+    // flex: 8,
     alignItems: 'center',
-    backgroundColor: '#DDDDDD',
+    backgroundColor: '#F4F6F6',
     padding: 10,
     borderRadius: 10,
+    borderWidth: 3,
+    borderColor: '#626F90',
   },
   selected: {
+    borderColor: '#79EEA0',
     alignItems: 'center',
-    backgroundColor: 'blue',
-    padding: 10,
+    backgroundColor: '#F4F6F6',
+    color: '#2FCF64',
+    // padding: 10,
     borderRadius: 10,
+  },
+  optionText: {
+    color: '#626F90',
+  },
+  returnTestListButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    // backgroundColor: '#79EEA0',
+    // borderRadius: 5,
+  },
+  btnText: {
+    color: '#FE8938',
+    // paddingBottom: 7,
+    // marginBottom: 7,
   },
 });
 
