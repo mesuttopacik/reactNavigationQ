@@ -9,10 +9,23 @@ import {
 // import {ScrollView} from 'react-native-gesture-handler';
 // import {TestListHeader} from './TestListHeader';
 import {QuizData} from '../guncelTestler/QuizData';
+import TestListHeader from './TestListHeader';
 
 export default class Guncel extends Component {
   static navigationOptions = {
-    title: 'test listesi',
+    headerTitle: () => <TestListHeader />,
+    // title: 'test listesi',
+    // headerStyle: {
+    //   // backgroundColor: '#FE8938',
+    // },
+    // headerTintColor: '#fff',
+    // headerTitleStyle: {
+    //   fontWeight: 'bold',
+    // },
+    // headerTitleStyle: {
+    //   textAlign: 'center',
+    //   flex: 1,
+    // },
   };
 
   render() {
@@ -128,106 +141,6 @@ export default class Guncel extends Component {
             }>
             <Text style={styles.text}>Test 10</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigate('Quiz', {
-                testData: QuizData.g11,
-                testName: '11. TEST',
-              })
-            }>
-            <Text style={styles.text}>Test 11</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigate('Quiz', {
-                testData: QuizData.g12,
-                testName: '12. TEST',
-              })
-            }>
-            <Text style={styles.text}>Test 12</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigate('Quiz', {
-                testData: QuizData.g13,
-                testName: '13. TEST',
-              })
-            }>
-            <Text style={styles.text}>Test 13</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigate('Quiz', {
-                testData: QuizData.g14,
-                testName: '14. TEST',
-              })
-            }>
-            <Text style={styles.text}>Test 14</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigate('Quiz', {
-                testData: QuizData.g15,
-                testName: '15. TEST',
-              })
-            }>
-            <Text style={styles.text}>Test 15</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigate('Quiz', {
-                testData: QuizData.g16,
-                testName: '16. TEST',
-              })
-            }>
-            <Text style={styles.text}>Test 16</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigate('Quiz', {
-                testData: QuizData.g17,
-                testName: '17. TEST',
-              })
-            }>
-            <Text style={styles.text}>Test 17</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigate('Quiz', {
-                testData: QuizData.g18,
-                testName: '18. TEST',
-              })
-            }>
-            <Text style={styles.text}>Test 18</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigate('Quiz', {
-                testData: QuizData.g19,
-                testName: '19. TEST',
-              })
-            }>
-            <Text style={styles.text}>Test 19</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigate('Quiz', {
-                testData: QuizData.g20,
-                testName: '20. TEST',
-              })
-            }>
-            <Text style={styles.text}>Test 20</Text>
-          </TouchableOpacity>
         </ScrollView>
       </View>
     );
@@ -251,6 +164,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#4D5656',
     borderRadius: 8,
+    shadowOffset: {width: 10, height: 10},
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    elevation: 3,
   },
   text: {
     color: '#4D5656',

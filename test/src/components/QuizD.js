@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Image,
 } from 'react-native';
+import InTestHeader from './InTestHeader';
 
 class Quiz extends Component {
   constructor(props) {
@@ -23,9 +24,9 @@ class Quiz extends Component {
     };
   }
 
-  // static navigationOptions = {
-  //   title: 'belki burada sevimi bir icon vardır',
-  // };
+  static navigationOptions = {
+    headerTitle: () => <InTestHeader />,
+  };
   nextquestion = () => {
     const {userAnswer, answer, score, empty, wrong} = this.state;
     this.setState({
@@ -234,6 +235,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     marginVertical: 8,
     paddingHorizontal: 10,
+    shadowOffset: {width: 10, height: 10},
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    elevation: 3,
   },
   resultPageFlatlist: {
     flex: 8,
@@ -258,6 +263,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 2,
     borderRadius: 15,
+    shadowOffset: {width: 10, height: 10},
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    elevation: 3,
   },
 
   resultPage: {
@@ -278,6 +287,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#275BDB',
     borderRadius: 4,
+    shadowOffset: {width: 10, height: 10},
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    elevation: 3,
   },
 
   checkImage: {
@@ -291,6 +304,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 30,
     borderRadius: 8,
+    shadowOffset: {width: 10, height: 10},
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    elevation: 3,
   },
   questionText: {
     // fontFamily: 'calibri',

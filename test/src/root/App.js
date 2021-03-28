@@ -8,7 +8,7 @@ import Quiz from '../components/QuizD';
 
 export default class App extends React.Component {
   render() {
-    return <AppContanier> </AppContanier>;
+    return <AppContanier />;
   }
 }
 
@@ -21,7 +21,7 @@ const AppNavigator = createStackNavigator({
   },
   Quiz: {
     screen: Quiz,
-  }
+  },
 });
 
 const AppContanier = createAppContainer(AppNavigator);
